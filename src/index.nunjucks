@@ -1,0 +1,6 @@
+{% extends '_layouts/base.nunjucks' %}
+
+{% import "_modules/link/link.nunjucks" as link %}
+{% block content %}
+<h1>Hey it's me</h1>
+{% endblock %}
