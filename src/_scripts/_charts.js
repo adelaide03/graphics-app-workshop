@@ -5,7 +5,7 @@ function createChart(el, fieldname){
 var margin = {top: 20, right:20, bottom:20, left:40};
 
 var container = d3.select(el);
-var svg = container.append('svg')
+
 var containerWidth = container.node().offsetWidth;
 var containerHeight = containerWidth * 0.66;
 
@@ -16,7 +16,7 @@ var svg = container.append('svg')
             .attr('width', containerWidth)
             .attr('height', containerHeight)
             .append('g')
-            	.attr('transform', `translate(${margin.left}, ${margin.top})`)
+            	.attr('transform', `translate(${margin.left}, ${margin.top})`);
 
 var xDomain = annualTotals.map(d => d.year);
 var yDomain = [0, d3.max(annualTotals.map(d => d[fieldname]))]
@@ -44,7 +44,10 @@ svg.append('g')
 
 svg.append('g')
 	.attr('class', 'y axis')
-	.call(yAxis)	
+	.call(yAxis)
+
+var tooltip = svg.append('text')
+    .attr('class', 'chart-tooltip');		
 
 svg.selectAll('.bar')
     .data(annualTotals)
@@ -55,6 +58,23 @@ svg.selectAll('.bar')
     .attr('y', d => yScale(d[fieldname]))
     .attr('width', xScale.bandwidth())
     .attr('height', d => chartHeight - yScale(d[fieldname]))
+    .on('mouseenter', function(d) {
+		// centers the text above each bar
+        var x = xScale(d.year) + xScale.bandwidth() / 2;
+        // the - 5 bumps up the text a bit so it's not directly over the bar
+        var y = yScale(d[fieldname]) - 5;
+
+        d3.select(this).classed('highlight', true);
+        tooltip.text(d[fieldname])
+            .attr('transform', `translate(${x}, ${y})`)
+            .raise();
+    })
+    .on('mouseleave', function(d) {
+        d3.select(this).classed('highlight', false);
+        tooltip.text('');
+    });
+
+
 
 
 }

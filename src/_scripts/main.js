@@ -12,3 +12,6 @@ $(() => {
 });
 
 var chart = require('./_charts.js');
+var L = require("leaflet");
+
+L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@1.4.0/dist/images/';
